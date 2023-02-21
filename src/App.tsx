@@ -14,6 +14,7 @@ import {
 } from '@chakra-ui/react';
 import './App.css';
 import TableBookItem from './TableBookItem';
+import { BiBookAdd, BiPrinter } from 'react-icons/bi';
 
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from './firebase';
@@ -49,8 +50,14 @@ function App() {
         <div className="text-2xl">{logo}</div>
         {/* BUTTONS */}
         <div>
-          <Button>Add Book</Button>
-          <Button className="ml-2">Print List</Button>
+          <Button>
+            <BiBookAdd />
+            Add Book
+          </Button>
+          <Button className="ml-2">
+            <BiPrinter />
+            Print List
+          </Button>
         </div>
       </div>
       {/* BODY */}
