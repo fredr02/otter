@@ -134,7 +134,7 @@ function App() {
       <div className="mx-auto mx mt-4 max-w-4xl">
         <Heading className="pl-3">Library Catalog</Heading>
         <TableContainer className="mt-4">
-          <Table variant="simple">
+          <Table variant="simple" size="sm">
             <TableCaption>Catalog</TableCaption>
             <Thead>
               <Tr>
