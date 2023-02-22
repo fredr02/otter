@@ -17,24 +17,24 @@ import './App.css';
 import TableBookItem from './TableBookItem';
 import { BiBookAdd, BiPrinter } from 'react-icons/bi';
 
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from './firebase';
+import { addDoc, collection, getDocs } from 'firebase/firestore';
+import { app, db } from './firebase';
 import AddBookModal from './AddBookModal';
 
-type book = {
+export type book = {
   name: string;
   author: string;
   released: string;
 };
 function App() {
   const [bookItems, setBookItems] = useState<book[] | null>(null);
-  const [scannedBook, setScannedBook] = useState<number>();
+  const [scannedBook, setScannedBook] = useState<string | undefined>();
 
   const [showAddBook, setShowAddBook] = useState(false);
 
   async function fetchCatalog() {
     const snapshot = await getDocs(collection(db, 'books'));
-    let bookData: book[] = [];
+    const bookData: book[] = [];
     snapshot.docs.forEach((doc) => {
       bookData.push(doc.data() as book);
     });
@@ -55,8 +55,12 @@ function App() {
       released: data.items[0].volumeInfo.publishedDate,
     };
     setScannedBook(undefined);
+    postBook(book);
   }
-
+  async function postBook(book) {
+    const docRef = await addDoc(collection(db, 'books'), book);
+    setBookItems((p) => [{ ...book, id: docRef.id }, ...p]);
+  }
   useEffect(() => {
     fetchCatalog();
   }, []);

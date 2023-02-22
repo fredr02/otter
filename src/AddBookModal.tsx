@@ -4,14 +4,14 @@ import React, { useEffect } from 'react';
 type AddBookModalProps = {
   show: boolean;
   setShowAddBook: React.Dispatch<React.SetStateAction<boolean>>;
-  setScannedBook: React.Dispatch<React.SetStateAction<number>>;
+  setScannedBook: React.Dispatch<React.SetStateAction<string | undefined>>;
 };
 const AddBookModal = ({
   show,
   setShowAddBook,
   setScannedBook,
 }: AddBookModalProps) => {
-  function onScanSuccess(book: number) {
+  function onScanSuccess(book: string) {
     setScannedBook(book);
     setShowAddBook(false);
   }
@@ -23,7 +23,9 @@ const AddBookModal = ({
       /* verbose= */ false
     );
     html5QrcodeScanner.render(onScanSuccess, onScanFailure);
-    return () => html5QrcodeScanner.clear();
+    return () => {
+      html5QrcodeScanner.clear();
+    };
   }, []);
   return (
     <>

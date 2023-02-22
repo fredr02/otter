@@ -1,8 +1,9 @@
 import React from 'react';
 import { Tr, Td, Button } from '@chakra-ui/react';
+import { book } from './App';
 
 type TableBookItemProps = {
-  bookItems: { name: string; author: string; released: number }[];
+  bookItems: book[];
 };
 const TableBookItem = ({ bookItems }: TableBookItemProps) => {
   if (bookItems) {
