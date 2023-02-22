@@ -1,5 +1,6 @@
 import { Html5QrcodeScanner, Html5QrcodeSupportedFormats } from 'html5-qrcode';
 import React, { useEffect } from 'react';
+import { AiOutlineCloseCircle } from 'react-icons/ai';
 
 type AddBookModalProps = {
   show: boolean;
@@ -31,11 +32,17 @@ const AddBookModal = ({
       html5QrcodeScanner.clear();
     };
   }, []);
+  function closeModal() {
+    setShowAddBook(false);
+  }
   return (
     <>
       <div className="w-screen h-screen bg-[#000] absolute top-0 opacity-50"></div>
       <div className="absolute top-0 flex items-center justify-center w-screen h-screen">
         <div id="reader" className="bg-[#fff] w-[20rem]"></div>
+        <button onClick={closeModal} className="text-4xl relative bottom-14">
+          <AiOutlineCloseCircle />
+        </button>
       </div>
     </>
   );
