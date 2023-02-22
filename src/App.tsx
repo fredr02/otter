@@ -66,15 +66,17 @@ function App() {
     postBook(book);
     console.log(data);
   }
-  async function postBook(book) {
+  async function postBook(book: any) {
     const docRef = await addDoc(collection(db, 'books'), book);
-    setBookItems((p) => [{ ...book, id: docRef.id }, ...p]);
+    setBookItems((p) => [{ ...book, id: docRef.id }, ...(p as book[])]);
   }
   async function deleteBook(book: book) {
     const docRef = doc(db, `books/${book.id}`);
     deleteDoc(docRef);
     setBookItems((p) => {
-      return p?.filter((item) => {
+      // Fix this. ESLINT is forcing this below
+      if (!p) return p;
+      return p.filter((item) => {
         return item.id != book.id;
       });
     });
