@@ -92,6 +92,9 @@ function App() {
   function enableShowAddBook() {
     setShowAddBook(true);
   }
+  function print() {
+    window.print();
+  }
 
   let logo: JSX.Element = <h1>Otter</h1>;
   if (import.meta.env.VITE_LOGOURL)
@@ -100,7 +103,7 @@ function App() {
     );
   return (
     <>
-      <div className="bg-pb-red h-20 flex justify-between items-center md:px-8 px-2">
+      <div className="print:hidden bg-pb-red h-20 flex justify-between items-center md:px-8 px-2">
         {/* LOGO */}
         <div className="text-2xl">{logo}</div>
         {/* BUTTONS */}
@@ -109,7 +112,7 @@ function App() {
             <BiBookAdd />
             Add Book
           </Button>
-          <Button className="ml-2">
+          <Button onClick={print} className="ml-2">
             <BiPrinter />
             Print List
           </Button>
@@ -126,7 +129,7 @@ function App() {
                 <Th>Author</Th>
                 <Th>Book Name</Th>
                 <Th>Released</Th>
-                <Th>Delete</Th>
+                <Th className="print:hidden">Delete</Th>
               </Tr>
             </Thead>
             <Tbody>

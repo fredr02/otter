@@ -15,7 +15,7 @@ const TableBookItem = ({ bookItems, deleteBook }: TableBookItemProps) => {
             <Td>{item.author}</Td>
             <Td>{item.name}</Td>
             <Td>{item.released}</Td>
-            <Td>
+            <Td className="print:hidden">
               <Button
                 onClick={() => {
                   deleteBook(item);
