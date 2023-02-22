@@ -1,4 +1,4 @@
-import { Html5QrcodeScanner } from 'html5-qrcode';
+import { Html5QrcodeScanner, Html5QrcodeSupportedFormats } from 'html5-qrcode';
 import React, { useEffect } from 'react';
 
 type AddBookModalProps = {
@@ -19,7 +19,11 @@ const AddBookModal = ({
   useEffect(() => {
     const html5QrcodeScanner = new Html5QrcodeScanner(
       'reader',
-      { fps: 10, qrbox: { width: 250, height: 250 } },
+      {
+        fps: 10,
+        qrbox: { width: 250, height: 250 },
+        formatsToSupport: [Html5QrcodeSupportedFormats.EAN_13],
+      },
       /* verbose= */ false
     );
     html5QrcodeScanner.render(onScanSuccess, onScanFailure);

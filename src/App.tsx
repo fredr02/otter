@@ -17,7 +17,13 @@ import './App.css';
 import TableBookItem from './TableBookItem';
 import { BiBookAdd, BiPrinter } from 'react-icons/bi';
 
-import { addDoc, collection, getDocs } from 'firebase/firestore';
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+} from 'firebase/firestore';
 import { app, db } from './firebase';
 import AddBookModal from './AddBookModal';
 
@@ -25,6 +31,7 @@ export type book = {
   name: string;
   author: string;
   released: string;
+  id: string;
 };
 function App() {
   const [bookItems, setBookItems] = useState<book[] | null>(null);
@@ -36,7 +43,7 @@ function App() {
     const snapshot = await getDocs(collection(db, 'books'));
     const bookData: book[] = [];
     snapshot.docs.forEach((doc) => {
-      bookData.push(doc.data() as book);
+      bookData.push({ ...doc.data(), id: doc.id } as book);
     });
     setBookItems(bookData);
   }
@@ -49,6 +56,7 @@ function App() {
       }`
     );
     const data = await response.json();
+    console.log(data);
     const book = {
       name: data.items[0].volumeInfo.title,
       author: data.items[0].volumeInfo.authors[0],
@@ -56,10 +64,20 @@ function App() {
     };
     setScannedBook(undefined);
     postBook(book);
+    console.log(data);
   }
   async function postBook(book) {
     const docRef = await addDoc(collection(db, 'books'), book);
     setBookItems((p) => [{ ...book, id: docRef.id }, ...p]);
+  }
+  async function deleteBook(book: book) {
+    const docRef = doc(db, `books/${book.id}`);
+    deleteDoc(docRef);
+    setBookItems((p) => {
+      return p?.filter((item) => {
+        return item.id != book.id;
+      });
+    });
   }
   useEffect(() => {
     fetchCatalog();
@@ -108,7 +126,10 @@ function App() {
               </Tr>
             </Thead>
             <Tbody>
-              <TableBookItem bookItems={bookItems as book[]} />
+              <TableBookItem
+                deleteBook={deleteBook}
+                bookItems={bookItems as book[]}
+              />
             </Tbody>
           </Table>
         </TableContainer>
