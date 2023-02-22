@@ -45,7 +45,19 @@ function App() {
     snapshot.docs.forEach((doc) => {
       bookData.push({ ...doc.data(), id: doc.id } as book);
     });
-    setBookItems(bookData);
+    sortCatalog(bookData);
+  }
+
+  function sortCatalog(bookData: book[]) {
+    setBookItems(
+      bookData.sort((a, b) => {
+        if (a.author <= b.author) {
+          return -1;
+        } else {
+          return 1;
+        }
+      })
+    );
   }
 
   async function fetchBook() {
@@ -68,7 +80,7 @@ function App() {
   }
   async function postBook(book: any) {
     const docRef = await addDoc(collection(db, 'books'), book);
-    setBookItems((p) => [{ ...book, id: docRef.id }, ...(p as book[])]);
+    sortCatalog([...(bookItems as book[]), { ...book, id: docRef.id }]);
   }
   async function deleteBook(book: book) {
     const docRef = doc(db, `books/${book.id}`);
