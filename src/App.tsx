@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { parseFullName } from 'parse-full-name';
 import {
   Heading,
   Table,
@@ -68,10 +69,11 @@ function App() {
       }`
     );
     const data = await response.json();
-    console.log(data);
+
+    const parsedName = parseFullName(data.items[0].volumeInfo.authors[0]);
     const book = {
       name: data.items[0].volumeInfo.title,
-      author: data.items[0].volumeInfo.authors[0],
+      author: `${parsedName.last}, ${parsedName.first}`,
       released: data.items[0].volumeInfo.publishedDate,
     };
     setScannedBook(undefined);
