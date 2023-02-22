@@ -95,10 +95,12 @@ function App() {
 
   let logo: JSX.Element = <h1>Otter</h1>;
   if (import.meta.env.VITE_LOGOURL)
-    logo = <img src={import.meta.env.VITE_LOGOURL} />;
+    logo = (
+      <img src={import.meta.env.VITE_LOGOURL} className="w-[100px] md:w-auto" />
+    );
   return (
     <>
-      <div className="bg-pb-red h-20 flex justify-between items-center px-8">
+      <div className="bg-pb-red h-20 flex justify-between items-center md:px-8 px-2">
         {/* LOGO */}
         <div className="text-2xl">{logo}</div>
         {/* BUTTONS */}
