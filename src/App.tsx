@@ -11,6 +11,7 @@ import {
   TableCaption,
   TableContainer,
   Button,
+  Modal,
 } from '@chakra-ui/react';
 import './App.css';
 import TableBookItem from './TableBookItem';
@@ -18,16 +19,20 @@ import { BiBookAdd, BiPrinter } from 'react-icons/bi';
 
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from './firebase';
+import AddBookModal from './AddBookModal';
 
 type book = {
   name: string;
   author: string;
-  released: number;
+  released: string;
 };
 function App() {
   const [bookItems, setBookItems] = useState<book[] | null>(null);
+  const [scannedBook, setScannedBook] = useState<number>();
 
-  async function fetchData() {
+  const [showAddBook, setShowAddBook] = useState(false);
+
+  async function fetchCatalog() {
     const snapshot = await getDocs(collection(db, 'books'));
     let bookData: book[] = [];
     snapshot.docs.forEach((doc) => {
@@ -36,9 +41,33 @@ function App() {
     setBookItems(bookData);
   }
 
+  async function fetchBook() {
+    if (scannedBook == undefined) return;
+    const response = await fetch(
+      `https://www.googleapis.com/books/v1/volumes?q=${scannedBook}+isbn&maxResults=1&key=${
+        import.meta.env.VITE_BOOKSAPI
+      }`
+    );
+    const data = await response.json();
+    const book = {
+      name: data.items[0].volumeInfo.title,
+      author: data.items[0].volumeInfo.authors[0],
+      released: data.items[0].volumeInfo.publishedDate,
+    };
+    setScannedBook(undefined);
+  }
+
   useEffect(() => {
-    fetchData();
+    fetchCatalog();
   }, []);
+
+  useEffect(() => {
+    fetchBook();
+  }, [scannedBook]);
+
+  function enableShowAddBook() {
+    setShowAddBook(true);
+  }
 
   let logo: JSX.Element = <h1>Otter</h1>;
   if (import.meta.env.VITE_LOGOURL)
@@ -50,7 +79,7 @@ function App() {
         <div className="text-2xl">{logo}</div>
         {/* BUTTONS */}
         <div>
-          <Button>
+          <Button onClick={enableShowAddBook}>
             <BiBookAdd />
             Add Book
           </Button>
@@ -80,6 +109,13 @@ function App() {
           </Table>
         </TableContainer>
       </div>
+      {showAddBook ? (
+        <AddBookModal
+          show={showAddBook}
+          setScannedBook={setScannedBook}
+          setShowAddBook={setShowAddBook}
+        />
+      ) : null}
     </>
   );
 }
