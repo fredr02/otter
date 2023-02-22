@@ -120,7 +120,7 @@ function App() {
       </div>
       {/* BODY */}
       <div className="mx-auto mx mt-4 max-w-4xl">
-        <Heading>Library Catalog</Heading>
+        <Heading className="pl-3">Library Catalog</Heading>
         <TableContainer className="mt-4">
           <Table variant="simple">
             <TableCaption>Catalog</TableCaption>
