@@ -1,21 +1,8 @@
+import { LibraryCatalog } from './LibraryCatalog';
 import React, { useEffect, useState } from 'react';
 import { parseFullName } from 'parse-full-name';
-import {
-  Heading,
-  Table,
-  Thead,
-  Tbody,
-  Tfoot,
-  Tr,
-  Th,
-  Td,
-  TableCaption,
-  TableContainer,
-  Button,
-  Modal,
-} from '@chakra-ui/react';
+import { Button } from '@chakra-ui/react';
 import './App.css';
-import TableBookItem from './TableBookItem';
 import { BiBookAdd, BiPrinter } from 'react-icons/bi';
 
 import {
@@ -25,7 +12,7 @@ import {
   doc,
   getDocs,
 } from 'firebase/firestore';
-import { app, db } from './firebase';
+import { db } from './firebase';
 import AddBookModal from './AddBookModal';
 
 export type book = {
@@ -34,6 +21,7 @@ export type book = {
   released: string;
   id: string;
 };
+
 function App() {
   const [bookItems, setBookItems] = useState<book[] | null>(null);
   const [scannedBook, setScannedBook] = useState<string | undefined>();
@@ -77,10 +65,10 @@ function App() {
       released: data.items[0].volumeInfo.publishedDate,
     };
     setScannedBook(undefined);
-    postBook(book);
+    postBook(book as book);
     console.log(data);
   }
-  async function postBook(book: any) {
+  async function postBook(book: book) {
     const docRef = await addDoc(collection(db, 'books'), book);
     sortCatalog([...(bookItems as book[]), { ...book, id: docRef.id }]);
   }
@@ -134,26 +122,10 @@ function App() {
       </div>
       {/* BODY */}
       <div className="mx-auto mx mt-4 max-w-4xl">
-        <Heading className="pl-3">Library Catalog</Heading>
-        <TableContainer className="mt-4">
-          <Table variant="simple" size="sm">
-            <TableCaption>Catalog</TableCaption>
-            <Thead>
-              <Tr>
-                <Th>Author</Th>
-                <Th>Book Name</Th>
-                <Th>Released</Th>
-                <Th className="print:hidden">Delete</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              <TableBookItem
-                deleteBook={deleteBook}
-                bookItems={bookItems as book[]}
-              />
-            </Tbody>
-          </Table>
-        </TableContainer>
+        <LibraryCatalog
+          deleteBook={deleteBook}
+          bookItems={bookItems as book[]}
+        />
       </div>
       {showAddBook ? (
         <AddBookModal
