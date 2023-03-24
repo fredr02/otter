@@ -1,4 +1,4 @@
-import { LibraryCatalog } from './LibraryCatalog';
+import { Catalog } from './components/Catalog';
 import React, { useEffect, useState } from 'react';
 import { parseFullName } from 'parse-full-name';
 import { Button } from '@chakra-ui/react';
@@ -122,9 +122,10 @@ function App() {
       </div>
       {/* BODY */}
       <div className="mx-auto mx mt-4 max-w-4xl">
-        <LibraryCatalog
-          deleteBook={deleteBook}
+        <Catalog
           bookItems={bookItems as book[]}
+          name="Library Catalog"
+          deleteBook={deleteBook}
         />
       </div>
       {showAddBook ? (

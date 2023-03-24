@@ -10,20 +10,20 @@ import {
   Table,
 } from '@chakra-ui/react';
 
-import { book } from './App';
+import { book } from '../App';
 
-import TableBookItem from './TableBookItem';
+import TableBookItem from '../TableBookItem';
 
 type LibraryCatalogProps = {
-  deleteBook: (book: book) => Promise<void>;
   bookItems: book[];
+  name: string;
+  deleteBook: (book: book) => Promise<void>;
 };
 
-export function LibraryCatalog({ deleteBook, bookItems }: LibraryCatalogProps) {
+export function Catalog({ bookItems, name, deleteBook }: LibraryCatalogProps) {
   return (
     <>
-      {' '}
-      <Heading className="pl-3">Library Catalog</Heading>
+      <Heading className="pl-3">{name}</Heading>
       <TableContainer className="mt-4">
         <Table variant="simple" size="sm">
           <TableCaption>Catalog</TableCaption>
